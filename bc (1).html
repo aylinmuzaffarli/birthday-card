@@ -1,0 +1,174 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Minimalistic Birthday Card - Fresh Pastels</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  body, html {
+    margin: 0; padding: 0;
+    height: 100%;
+    background: #fdfefe;
+    font-family: 'Open Sans', sans-serif;
+    display: flex; justify-content: center; align-items: center;
+    overflow: hidden;
+  }
+  .card {
+    position: relative;
+    width: 400px;
+    max-width: 90vw;
+    background: #fff;
+    border-radius: 24px;
+    padding: 64px 48px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    text-align: center;
+    z-index: 10;
+  }
+  /* Soft blurred dynamic accents */
+  .accent {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0.14;
+    z-index: 0;
+    animation: float 18s ease-in-out infinite alternate;
+  }
+  .accent1 {
+    width: 160px; height: 160px;
+    background: #ff8a00;
+    top: -60px; right: -60px;
+  }
+  .accent2 {
+    width: 140px; height: 140px;
+    background: #00b6ff;
+    bottom: -50px; left: -50px;
+    animation-delay: 2s;
+  }
+  .accent3 {
+    width: 120px; height: 120px;
+    background: #ff1493;
+    top: 30%; left: 40%;
+    animation-delay: 4s;
+  }
+  .accent4 {
+    width: 130px; height: 130px;
+    background: #f5e960;
+    top: 10%; right: 30%;
+    animation-delay: 6s;
+  }
+  .accent5 {
+    width: 110px; height: 110px;
+    background: #9a6cff;
+    bottom: 20%; left: 35%;
+    animation-delay: 8s;
+  }
+  @keyframes float {
+    0% { transform: translateY(0) translateX(0) scale(1); }
+    100% { transform: translateY(-20px) translateX(10px) scale(1.05); }
+  }
+
+  /* Text styles */
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.2rem;
+    margin: 0 0 24px;
+    color: #ff8a00;
+  }
+  p {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin: 0 0 28px;
+    color: #444;
+    font-weight: 600;
+  }
+  .quote {
+    font-style: italic;
+    color: #ff8a00;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 36px;
+  }
+  .signature {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #ff8a00;
+  }
+  /* Navigation buttons */
+  .nav-btn {
+    position: absolute;
+    bottom: 20px;
+    background: transparent;
+    border: none;
+    font-size: 2.8rem;
+    color: #ff8a00;
+    cursor: pointer;
+    user-select: none;
+    z-index: 10;
+    transition: color 0.3s ease;
+  }
+  .nav-btn:hover { color: #ffa733; }
+  .prev-btn { left: 20px; }
+  .next-btn { right: 20px; }
+  /* Fade animation */
+  .fade { opacity: 0; transform: translateY(10px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade.active { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+<div class="accent accent1"></div>
+<div class="accent accent2"></div>
+<div class="accent accent3"></div>
+<div class="accent accent4"></div>
+<div class="accent accent5"></div>
+
+<div class="card">
+  <h1 class="fade active" id="headline">Happy Birthday Mom!</h1>
+  <p class="fade active" id="text1">Thank you for every hug, every word, and every moment you’ve given me.</p>
+  <p class="fade active" id="text2">I love you more than words can say.</p>
+  <div class="quote fade active" id="quote">"A mother's love is the heart of a family."</div>
+  <div class="signature fade active" id="signature">— Aylin, 04 July 2025</div>
+
+  <button class="nav-btn prev-btn" aria-label="Previous" id="prevBtn" disabled>&larr;</button>
+  <button class="nav-btn next-btn" aria-label="Next" id="nextBtn">&#8594;</button>
+</div>
+
+<script>
+(function(){
+  const slides=[
+    {headline:"Happy Birthday Mom!", text1:"Thank you for every hug, every word, and every moment you’ve given me.", text2:"I love you more than words can say.", quote:"\"A mother's love is the heart of a family.\"", signature:"— Aylin, 04 July 2025"},
+    {headline:"To the Best Mom", text1:"Your strength and kindness inspire me every day.", text2:"I'm grateful beyond words to have you in my life.", quote:"\"Home is where a mother's heart is.\"", signature:"— Aylin"},
+    {headline:"Forever Loved", text1:"No matter the distance or time, my love for you only grows.", text2:"Thank you for your endless support and care.", quote:"\"Love is the thread that binds our hearts.\"", signature:"— Aylin"}
+  ];
+  let current=0;
+  const h=document.getElementById('headline'),
+        t1=document.getElementById('text1'),
+        t2=document.getElementById('text2'),
+        q=document.getElementById('quote'),
+        s=document.getElementById('signature'),
+        next=document.getElementById('nextBtn'),
+        prev=document.getElementById('prevBtn');
+  function update(){
+    prev.disabled=current===0; next.disabled=current===slides.length-1;
+    [h,t1,t2,q,s].forEach(el=>el.classList.remove('active'));
+    setTimeout(()=>{
+      h.textContent=slides[current].headline;
+      t1.textContent=slides[current].text1;
+      t2.textContent=slides[current].text2;
+      q.textContent=slides[current].quote;
+      s.textContent=slides[current].signature;
+      [h,t1,t2,q,s].forEach(el=>el.classList.add('active'));
+    },300);
+  }
+  next.onclick=()=>{if(current<slides.length-1){current++;update();}};
+  prev.onclick=()=>{if(current>0){current--;update();}};
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'&&current<slides.length-1){current++;update();}
+    if(e.key==='ArrowLeft'&&current>0){current--;update();}
+  });
+})();
+</script>
+</body>
+</html> 
